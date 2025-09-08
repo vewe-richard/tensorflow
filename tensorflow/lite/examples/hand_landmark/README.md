@@ -1,3 +1,51 @@
+# build hand_landmark and run on android
+### build hand_landmark
+Ref:  
+https://ai.google.dev/edge/litert/build/android
+
+```
+git clone https://github.com/vewe-richard/tensorflow.git
+mkdir docker
+cp ./tensorflow/tensorflow/lite/tools/tflite-android.Dockerfile docker/
+cd docker
+docker build . -t tflite-builder -f tflite-android.Dockerfile
+cd ../tensorflow
+docker run -it -v $PWD:/host_dir tflite-builder bash
+
+# below commands are in the container
+cd /host_dir
+sdkmanager \
+  "build-tools;${ANDROID_BUILD_TOOLS_VERSION}" \
+  "platform-tools" \
+  "platforms;android-${ANDROID_API_LEVEL}"
+bazel build -c opt --cxxopt=--std=c++17 --config=android_arm64 \
+  --define=android_dexmerger_tool=d8_dexmerger \
+  --define=android_incremental_dexing_tool=d8_dexbuilder \
+  //tensorflow/lite/examples/hand_landmark:hand_landmark_detector 
+
+cp bazel-bin/tensorflow/lite/examples/hand_landmark/hand_landmark_detector ./
+```
+
+### Run hand_landmark
+```
+# In host shell
+
+cd tensorflow
+adb push hand_landmark_detector /data/local/tmp
+adb push tensorflow/lite/examples/hand_landmark/data/hand_landmark.tflite /data/local/tmp/tensorflow/lite/examples/hand_landmark/data/
+adb push tensorflow/lite/examples/hand_landmark/data/hand.bmp /data/local/tmp/tensorflow/lite/examples/hand_landmark/data/
+
+adb shell
+cd /data/local/tmp
+./hand_landmark_detector
+```
+
+
+
+
+
+
+
 # convert.py
 1. Read hand.png, resize and print image data in c array format  
 This array is copied to hand_landmark_detector.h
