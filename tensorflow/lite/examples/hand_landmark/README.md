@@ -1,8 +1,8 @@
 # convert.py
-1. Read hand.png, resize and print image data in c array format
+1. Read hand.png, resize and print image data in c array format  
 This array is copied to hand_landmark_detector.h
 
-2. Print out hand landmarks as reference
+2. Print out hand landmarks as reference  
 Hand Landmarks (x, y, z):
 Point 0: (127.7, 218.5, 0.0)
 Point 1: (156.6, 206.4, -11.5)
@@ -11,20 +11,27 @@ Point 1: (156.6, 206.4, -11.5)
 3. Generate hand_with_landmarks.png
 
 To run convert.py
+```
 python3 -m venv tflite_env
 source tflite_env/bin/activate
 pip install tensorflow numpy pillow matplotlib
 cd tensorflow/lite/examples/hand_landmark/data
 python convert.py
+```
 
 # hand_landmark_detector.cc
-Compile:
+Compile:  
+```
 bazel build -c opt //tensorflow/lite/examples/hand_landmark:hand_landmark_detector
+```
 
-Run:
+Run:   
+```
 ./bazel-bin/tensorflow/lite/examples/hand_landmark/hand_landmark_detector
+```
 
 Output:
+```
 Hand Landmarks (x, y, z):             
 Point 0: (127.734, 218.472, 0.00866227
 Point 1: (156.626, 206.355, -11.4939) 
@@ -47,6 +54,7 @@ Point 17: (95.2146, 150.759, -7.3783)
 Point 18: (81.6858, 125.009, -11.9655)
 Point 19: (72.9781, 109.723, -16.3566)
 Point 20: (65.3016, 92.2134, -20.3649)
+```
 
 
 
